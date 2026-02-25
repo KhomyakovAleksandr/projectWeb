@@ -24,5 +24,7 @@ public interface CompanyService {
 
     ShowDetailedCompanyInfoDto companyDetails(String companyName);
 
+    List<ShowCompanyInfoDto> getCompaniesSortedByEmployeees();
+
     void removeCompany(String companyName);
 }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Компании по количеству сотрудников</title>
+</head>
+<body>
+<h1>Рейтинг компаний</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Название</th>
+        <th>Город</th>
+        <th>Количество сотрудников</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${companies}">
+        <td th:text="${c.name}">Название</td>
+        <td th:text="${c.town}">Город</td>
+        <td th:text="${c.employeeCount}">0</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -37,5 +37,8 @@ public interface CompanyRepository extends JpaRepository<Company, String> {
     @Modifying
     @Transactional
     void deleteByName(String name);
+
+    @Query("SELECT c FROM Company c LEFT JOIN c.employees e GROUP BY c.id ORDER BY COUNT(e) DESC")
+    List<Company> findAllOrderByEmployeeCount();
 }
 

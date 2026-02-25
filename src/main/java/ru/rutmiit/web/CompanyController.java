@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.rutmiit.dto.ShowCompanyInfoDto;
 
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequestMapping("/companies")
@@ -101,5 +103,15 @@ public class CompanyController {
         redirectAttributes.addFlashAttribute("successMessage", 
             "Компания '" + companyName + "' успешно удалена!");
         return "redirect:/companies/all";
+    }
+
+    @GetMapping("/top")
+    public String showTopCompanies(Model model) {
+        // Вызываем твой новый метод из сервиса
+        List<ShowCompanyInfoDto> sortedCompanies = companyService.getCompaniesSortedByEmployeees();
+
+        // Передаем этот список в HTML под именем "companies"
+        model.addAttribute("companies", sortedCompanies);
+        return "companies-top";
     }
 }

@@ -110,4 +110,16 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.deleteByName(companyName);
         log.info("Компания успешно удалена: {}", companyName);
     }
+
+    @Override
+    public List<ShowCompanyInfoDto> getCompaniesSortedByEmployeees() {
+        return companyRepository.findAllOrderByEmployeeCount()
+                .stream()
+                .map(company -> {
+                    ShowCompanyInfoDto dto = mapper.map(company, ShowCompanyInfoDto.class);
+                    dto.setEmployeeCount(company.getEmployees().size());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 }
