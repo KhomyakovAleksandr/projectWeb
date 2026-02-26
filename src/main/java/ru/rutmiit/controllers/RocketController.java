@@ -64,7 +64,7 @@ public class RocketController {
     public String listRockets(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
         List<RocketDTO> rockets;
 
-        // Если в строке поиска пусто (keyword == null), просто берем все ракеты
+
         if (keyword != null && !keyword.trim().isEmpty()) {
             rockets = rocketService.searchRockets(keyword);
         } else {
@@ -72,7 +72,7 @@ public class RocketController {
         }
 
         model.addAttribute("rockets", rockets);
-        model.addAttribute("keyword", keyword); // Это чтобы текст не исчезал из поля поиска после нажатия
+        model.addAttribute("keyword", keyword);
 
         return "rockets";
     }

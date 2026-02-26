@@ -32,13 +32,18 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findByUsername(username).orElseThrow();
         Rocket rocket = rocketRepository.findById(orderDto.getRocketId()).orElseThrow();
 
+        // ПРОВЕРКА: Вес из формы (DTO) сравниваем с payloadCapacity из твоей сущности
+        if (orderDto.getCargoWeight() > rocket.getPayloadCapacity()) {
+            throw new IllegalArgumentException("Груз слишком тяжелый для этой ракеты!");
+        }
+
         Order order = new Order();
         order.setUser(user);
         order.setRocket(rocket);
         order.setCargoName(orderDto.getCargoName());
         order.setCargoWeight(orderDto.getCargoWeight());
         order.setOrbitType(orderDto.getOrbitType());
-        order.setStatus(OrderStatus.PENDING); // Начальный статус: "Проверяется"
+        order.setStatus(OrderStatus.PENDING);
 
         orderRepository.save(order);
     }

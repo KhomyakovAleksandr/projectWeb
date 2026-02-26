@@ -8,7 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.rutmiit.dto.OrderCreateDto;
+import ru.rutmiit.models.entities.Rocket;
 import ru.rutmiit.models.enums.OrderStatus;
+import ru.rutmiit.repositories.RocketRepository;
 import ru.rutmiit.services.OrderService;
 
 import java.security.Principal;
@@ -18,28 +20,35 @@ import java.security.Principal;
 public class OrderController {
 
     private final OrderService orderService;
+    private final RocketRepository rocketRepository;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, RocketRepository rocketRepository) {
         this.orderService = orderService;
+        this.rocketRepository = rocketRepository;
     }
 
-    // 1. Страница списка заказов
     @GetMapping
     public String listOrders(Principal principal, Model model) {
         model.addAttribute("orders", orderService.getAllOrders(principal.getName()));
         return "orders"; // Твой orders.html
     }
 
-    // 2. Показ формы бронирования (GET)
+
     @GetMapping("/create/{rocketId}")
     public String showCreateForm(@PathVariable Long rocketId, Model model) {
+        Rocket rocket = rocketRepository.findById(rocketId)
+                .orElseThrow(() -> new IllegalArgumentException("Ракета не найдена"));
+
         OrderCreateDto dto = new OrderCreateDto();
         dto.setRocketId(rocketId);
+
         model.addAttribute("orderCreateDto", dto);
+        // Берем payloadCapacity и кладем в переменную maxWeight для HTML
+        model.addAttribute("maxWeight", rocket.getPayloadCapacity());
+
         return "order-create";
     }
 
-    // 3. Обработка формы бронирования (POST)
     @PostMapping("/create")
     public String createOrder(@Valid OrderCreateDto orderCreateDto,
                               BindingResult bindingResult,
@@ -52,7 +61,7 @@ public class OrderController {
         return "redirect:/orders";
     }
 
-    // 4. Смена статуса (только для модератора)
+
     @PostMapping("/status/{id}")
     @PreAuthorize("hasRole('MODERATOR')")
     public String changeStatus(@PathVariable Long id, @RequestParam OrderStatus status) {

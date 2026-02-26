@@ -5,12 +5,25 @@
     <title>Список заказов - Space Delivery</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        /* Фон страницы из твоего примера */
-        body { background-color: #212529; color: white; }
+        /* Общий фон страницы (цвет из image_4.png) */
+        body {
+            background-color: #212529;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
         /* Навигация */
-        .navbar { background-color: #000 !important; border-bottom: 1px solid #333; }
-        .nav-link { color: #fff !important; font-weight: 500; text-transform: uppercase; }
+        .navbar {
+            background-color: #000 !important;
+            border-bottom: 1px solid #333;
+        }
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
 
         /* Контейнер таблицы */
         .orders-wrapper {
@@ -38,20 +51,20 @@
         }
         .table tr:hover td { background-color: #252525 !important; }
 
-        /* ЧИТАЕМОСТЬ КОНТЕНТА */
-        .client-name { color: #ccc !important; font-weight: 500; } /* Имя клиента - светло-серое */
-        .cargo-title { color: #ffffff !important; font-weight: 600; } /* Название груза - белое */
-        .cargo-info { color: #999 !important; } /* Доп. инфо - чуть светлее */
+        /* Видимость контента */
+        .client-name { color: #ccc !important; font-weight: 500; }
+        .cargo-title { color: #ffffff !important; font-weight: 600; }
+        .cargo-info { color: #aaaaaa !important; }
 
-        /* Статус-селект */
+        /* Статус-селект (темный фон, яркий текст) */
         .status-select {
             background-color: #121212 !important;
-            color: #fff !important;
+            color: #ffffff !important;
             border: 1px solid #444 !important;
             border-radius: 8px;
         }
 
-        /* Бейджи */
+        /* Бейджи статусов */
         .badge-status { padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; }
         .badge-pending { background-color: #444; }
         .badge-approved { background-color: #0d6efd; }
@@ -59,6 +72,32 @@
         .badge-inflight { background-color: #6610f2; }
         .badge-completed { background-color: #198754; }
         .badge-canceled { background-color: #dc3545; }
+
+        /* ФУТЕР: Контрастный текст без полос */
+        .footer-simple {
+            margin-top: auto;
+            padding: 50px 0 30px 0;
+            text-align: center;
+        }
+        .support-text {
+            font-size: 0.85rem;
+            color: #aaaaaa; /* Светлее для лучшей видимости */
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+        }
+        .support-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 20px;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+        .support-link:hover {
+            opacity: 1;
+            color: #0dcaf0;
+        }
     </style>
 </head>
 <body>
@@ -120,13 +159,21 @@
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(orders)}">
-                    <td colspan="6" class="text-center py-5 text-secondary">Список заказов пуст</td>
+                    <td th:colspan="${#authorization.expression('hasRole(''MODERATOR'')') ? 6 : 5}" class="text-center py-5 text-secondary">Список заказов пуст</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<footer class="footer-simple" sec:authorize="hasRole('USER')">
+    <div class="container">
+        <span class="support-text">Поддержка:</span>
+        <a href="tel:+79991234567" class="support-link">+7 (999) 123-45-67</a>
+        <a href="mailto:space.delivery.support@mail.ru" class="support-link">space.delivery.support@mail.ru</a>
+    </div>
+</footer>
 
 </body>
 </html>

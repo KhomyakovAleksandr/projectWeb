@@ -84,7 +84,7 @@
                     <h5 class="card-title fw-bold text-info" th:text="${rocket.name}">Falcon 9</h5>
                     <p class="card-text text-secondary small" th:text="${#strings.abbreviate(rocket.description, 150)}">Описание...</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="fs-5 fw-bold" th:text="${rocket.price} + ' $'">62M $</span>
+                        <span class="fs-5 fw-bold" th:text="${rocket.price} + ' $/kg'">62M $</span>
                         <a th:href="@{/rockets/details/{id}(id=${rocket.id})}" class="btn btn-sm btn-outline-primary px-3">Подробнее</a>
                     </div>
                 </div>
