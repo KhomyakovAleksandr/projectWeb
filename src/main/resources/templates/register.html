@@ -2,58 +2,112 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Регистрация компании</title>
+    <title>Регистрация - Space Delivery</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #212529; color: white; }
+
+        .auth-card {
+            background-color: #121212;
+            border: 1px solid #444;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        /* ИСПРАВЛЕНО: Текст внутри полей теперь белый и четкий */
+        .custom-input {
+            background-color: #1e1e1e !important;
+            color: #ffffff !important;
+            border: 1px solid #444 !important;
+            border-radius: 10px !important;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        /* Светлый плейсхолдер для контраста */
+        .custom-input::placeholder { color: #aaaaaa !important; }
+
+        /* ФИКС АВТОЗАПОЛНЕНИЯ: Чтобы поля не "белели" при выборе старых данных */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px #1e1e1e inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .custom-input:focus {
+            border-color: #198754 !important;
+            box-shadow: 0 0 10px rgba(25, 135, 84, 0.2) !important;
+            outline: none !important;
+        }
+
+        .is-invalid { border-color: #dc3545 !important; }
+
+        .form-label { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .btn-success { background-color: #2e66e5; border: none; border-radius: 10px; padding: 12px; font-weight: bold; }
+        .link-info { text-decoration: none; color: #0dcaf0; }
+    </style>
 </head>
-<body class="bg-dark text-white">
-<div class="container mt-5">
+<body>
+
+<div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6 card bg-light text-dark p-4 shadow">
-            <h3 class="text-center mb-4">Регистрация в Space Delivery</h3>
+        <div class="col-md-6 auth-card p-5">
+            <h3 class="text-center fw-bold mb-2">Создать аккаунт</h3>
+            <p class="text-center text-secondary small mb-5">Присоединяйтесь к флоту Space Delivery</p>
 
             <form th:action="@{/users/register}" th:method="post" th:object="${userRegistrationDto}">
-
                 <div class="mb-3">
                     <label class="form-label">Логин компании</label>
-                    <input th:field="*{username}" type="text" class="form-control" th:errorclass="'is-invalid'">
-                    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback"></div>
+                    <input th:field="*{username}" type="text" class="form-control custom-input"
+                           th:errorclass="'is-invalid'" placeholder="Напр: space_x">
+                    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger small mt-1"></div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Полное название (или ФИО представителя)</label>
-                    <input th:field="*{fullname}" type="text" class="form-control" th:errorclass="'is-invalid'">
-                    <div th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" class="invalid-feedback"></div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input th:field="*{email}" type="email" class="form-control" th:errorclass="'is-invalid'">
-                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback"></div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Возраст (лет на рынке)</label>
-                    <input th:field="*{age}" type="number" class="form-control" th:errorclass="'is-invalid'">
-                    <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="invalid-feedback"></div>
+                    <label class="form-label">Полное название / ФИО представителя</label>
+                    <input th:field="*{fullname}" type="text" class="form-control custom-input"
+                           th:errorclass="'is-invalid'" placeholder="Введите полное имя">
+                    <div th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" class="text-danger small mt-1"></div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Пароль</label>
-                        <input th:field="*{password}" type="password" class="form-control" th:errorclass="'is-invalid'">
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label">Email</label>
+                        <input th:field="*{email}" type="email" class="form-control custom-input"
+                               th:errorclass="'is-invalid'" placeholder="corp@space.com">
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small mt-1"></div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Подтвердите пароль</label>
-                        <input th:field="*{confirmPassword}" type="password" class="form-control" th:errorclass="'is-invalid'">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Лет на рынке</label>
+                        <input th:field="*{age}" type="number" class="form-control custom-input"
+                               th:errorclass="'is-invalid'" placeholder="0">
+                        <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="text-danger small mt-1"></div>
                     </div>
-                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback d-block"></div>
                 </div>
 
-                <button type="submit" class="btn btn-success w-100 mt-3">Зарегистрироваться</button>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Пароль</label>
+                        <input th:field="*{password}" type="password" class="form-control custom-input" th:errorclass="'is-invalid'">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Подтверждение</label>
+                        <input th:field="*{confirmPassword}" type="password" class="form-control custom-input" th:errorclass="'is-invalid'">
+                    </div>
+                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger small px-3"></div>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Зарегистрировать аккаунт</button>
             </form>
 
-            <div class="mt-3 text-center">
-                <small>Уже есть аккаунт? <a th:href="@{/users/login}">Войти</a></small>
+            <div class="mt-4 text-center">
+                <span class="text-secondary small">Уже есть доступ?</span>
+                <a th:href="@{/users/login}" class="link-info small">Войти</a>
             </div>
         </div>
     </div>
