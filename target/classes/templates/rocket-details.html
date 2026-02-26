@@ -6,45 +6,132 @@
     <meta charset="UTF-8">
     <title>Детали ракеты - Space Delivery</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #1a1d20;
+        }
+
+        .navbar {
+            background-color: #000 !important;
+            border-bottom: 1px solid #333;
+        }
+
+        /* Главная карточка в стиле антрацит с обводкой #444 */
+        .details-card {
+            background-color: #121212;
+            border: 1px solid #444;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .text-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .characteristic-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* Вертикальный разделитель */
+        .info-divider {
+            border-left: 1px solid #333;
+        }
+
+        @media (max-width: 768px) {
+            .info-divider {
+                border-left: none;
+                border-top: 1px solid #333;
+                padding-top: 2rem;
+                margin-top: 2rem;
+            }
+        }
+
+        .btn {
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        /* ФИКС КНОПКИ "ВЕРНУТЬСЯ": Только яркая обводка при наведении */
+        .btn-back {
+            color: #aaa !important; /* Текст всегда серый */
+            border-color: #444 !important; /* Обводка в покое тусклая */
+            background-color: transparent !important; /* Фон всегда прозрачный */
+        }
+
+        .btn-back:hover, .btn-back:focus {
+            color: #aaa !important; /* Текст НЕ меняется */
+            border-color: #fff !important; /* Обводка становится яркой (белой) */
+            background-color: transparent !important; /* Фон НЕ меняется */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1) !important; /* Легкое свечение */
+        }
+    </style>
 </head>
-<body class="bg-dark text-white">
-<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow mb-5 border-bottom border-secondary">
-    <div class="container"><a class="navbar-brand fw-bold" href="/">🚀 Space Delivery</a></div>
+<body class="text-white">
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow mb-5">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">🚀 Space Delivery</a>
+    </div>
 </nav>
 
-<div class="container">
-    <div class="p-5 rounded border border-secondary bg-black shadow-lg">
-        <h1 class="display-4 text-info" th:text="${rocket.name}">Falcon 9</h1>
-        <hr class="bg-secondary">
-        <div class="row mt-4">
-            <div class="col-md-8">
-                <h4>Описание миссии</h4>
-                <p class="lead text-secondary" th:text="${rocket.description}">Тут длинный текст...</p>
+<div class="container pb-5">
+    <div class="p-5 details-card">
+        <div class="mb-4">
+            <h1 class="display-4 fw-bold text-info mb-0" th:text="${rocket.name}">Falcon 9</h1>
+        </div>
+
+        <hr class="border-secondary mb-5">
+
+        <div class="row">
+            <div class="col-md-7 pe-md-5">
+                <h4 class="text-white mb-3">Описание миссии</h4>
+                <p class="lead text-secondary" style="line-height: 1.8;" th:text="${rocket.description}">
+                    Детальное описание технических возможностей ракеты.
+                </p>
             </div>
-            <div class="col-md-4 border-start border-secondary ps-4">
-                <h5>Характеристики:</h5>
-                <p>💰 Цена: <span class="text-white" th:text="${rocket.price} + ' $'">0 $</span></p>
-                <p>⚖️ Грузоподъемность: <span class="text-white" th:text="${rocket.payloadCapacity} + ' кг'">0 кг</span></p>
+
+            <div class="col-md-5 info-divider ps-md-5">
+                <h4 class="text-white mb-4">Характеристики</h4>
+
+                <div class="mb-4">
+                    <div class="text-label mb-1">💰 Стоимость пуска</div>
+                    <div class="characteristic-value" th:text="${rocket.price} + ' $'">0 $</div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="text-label mb-1">⚖️ Грузоподъемность</div>
+                    <div class="characteristic-value" th:text="${rocket.payloadCapacity} + ' кг'">0 кг</div>
+                </div>
 
                 <a th:href="@{/orders/create/{id}(id=${rocket.id})}"
                    sec:authorize="hasRole('USER')"
-                   class="btn btn-primary btn-lg w-100 mt-4">
+                   class="btn btn-primary btn-lg w-100 mt-4 shadow">
                     Забронировать пуск
                 </a>
 
-                <div sec:authorize="hasRole('MODERATOR')" class="mt-4">
-                    <hr class="bg-secondary">
+                <div sec:authorize="hasRole('MODERATOR')" class="mt-4 pt-4 border-top border-secondary">
                     <form th:action="@{/rockets/delete/{id}(id=${rocket.id})}" th:method="post">
                         <button type="submit" class="btn btn-outline-danger w-100"
                                 onclick="return confirm('Вы уверены, что хотите безвозвратно удалить эту ракету из реестра?')">
-                            🗑 Удалить ракету
+                            🗑 Удалить из реестра
                         </button>
                     </form>
                 </div>
             </div>
         </div>
-        <a href="/rockets" class="btn btn-outline-light mt-5">← Вернуться в каталог</a>
+
+        <div class="mt-5 pt-4">
+            <a href="/rockets" class="btn btn-back px-4">
+                ← Вернуться в каталог
+            </a>
+        </div>
     </div>
 </div>
+
 </body>
 </html>

@@ -8,11 +8,39 @@
         body { background-color: #121212; }
         .navbar { background-color: #000 !important; border-bottom: 1px solid #333; }
         .nav-link { color: #fff !important; font-weight: 500; }
-        .rocket-card { background: #1e1e1e; border: 1px solid #333; transition: 0.3s; }
-        .rocket-card:hover { border-color: #0d6efd; transform: translateY(-5px); }
-        /* Стили для формы поиска */
-        .search-input { background-color: #000 !important; color: white !important; border: 1px solid #333 !important; }
-        .search-input:focus { border-color: #0d6efd !important; box-shadow: none !important; }
+
+        /* КАРТОЧКИ: Светлая обводка #444 и закругление 15px */
+        .rocket-card {
+            background: #1e1e1e;
+            border: 1px solid #444; /* Сделали светлее */
+            border-radius: 15px;
+            transition: 0.3s;
+        }
+        .rocket-card:hover {
+            border-color: #0d6efd;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ПОИСК: Светлая обводка и тот же цвет фона */
+        .search-input {
+            background-color: #1e1e1e !important;
+            color: white !important;
+            border: 1px solid #444 !important; /* Сделали светлее */
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .search-input::placeholder {
+            color: #777 !important;
+        }
+        .search-input:focus {
+            background-color: #252525 !important;
+            border-color: #0d6efd !important;
+            box-shadow: 0 0 10px rgba(13, 110, 253, 0.2) !important;
+            outline: none !important;
+        }
+
+        .btn { border-radius: 10px; }
     </style>
 </head>
 <body class="bg-dark text-white">
@@ -40,7 +68,7 @@
                 <input type="text" name="keyword" th:value="${keyword}"
                        class="form-control search-input"
                        placeholder="Поиск по названию ракеты..." aria-label="Search">
-                <button class="btn btn-primary" type="submit">Найти</button>
+                <button class="btn btn-primary px-4" type="submit">Найти</button>
                 <a th:href="@{/rockets}" class="btn btn-outline-secondary" th:if="${keyword != null and keyword != ''}">Сброс</a>
             </form>
             <div class="mt-2 small text-secondary" th:if="${keyword != null and keyword != ''}">
@@ -49,24 +77,26 @@
         </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
         <div class="col" th:each="rocket : ${rockets}">
             <div class="card rocket-card h-100 text-white p-3">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold" th:text="${rocket.name}">Falcon 9</h5>
-                    <p class="card-text text-secondary small" th:text="${#strings.abbreviate(rocket.description, 100)}">Описание...</p>
+                    <h5 class="card-title fw-bold text-info" th:text="${rocket.name}">Falcon 9</h5>
+                    <p class="card-text text-secondary small" th:text="${#strings.abbreviate(rocket.description, 150)}">Описание...</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="text-info fw-bold" th:text="${rocket.price} + ' $'">62M $</span>
-                        <a th:href="@{/rockets/details/{id}(id=${rocket.id})}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                        <span class="fs-5 fw-bold" th:text="${rocket.price} + ' $'">62M $</span>
+                        <a th:href="@{/rockets/details/{id}(id=${rocket.id})}" class="btn btn-sm btn-outline-primary px-3">Подробнее</a>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(rockets)}">
             <h4 class="text-secondary">Ракеты по вашему запросу не найдены 🚀</h4>
-            <a th:href="@{/rockets}" class="text-info">Показать все ракеты</a>
+            <a th:href="@{/rockets}" class="text-info text-decoration-none">Показать все ракеты</a>
         </div>
     </div>
 </div>
+
 </body>
 </html>

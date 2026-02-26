@@ -5,9 +5,55 @@
     <title>Список заказов - Space Delivery</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        .status-select { min-width: 150px; background-color: #1a1a1a !important; color: #fff !important; border: 1px solid #444; }
-        .table-dark { --bs-table-bg: #000; }
-        .badge-pending { background-color: #6c757d; }
+        /* Фон страницы из твоего примера */
+        body { background-color: #212529; color: white; }
+
+        /* Навигация */
+        .navbar { background-color: #000 !important; border-bottom: 1px solid #333; }
+        .nav-link { color: #fff !important; font-weight: 500; text-transform: uppercase; }
+
+        /* Контейнер таблицы */
+        .orders-wrapper {
+            background-color: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Таблица */
+        .table { color: white !important; margin-bottom: 0; border-color: #444; }
+        .table thead th {
+            background-color: #1e1e1e !important;
+            color: #888 !important;
+            border-bottom: 2px solid #444;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        .table td {
+            background-color: #1e1e1e !important;
+            border-bottom: 1px solid #333;
+            padding: 15px 10px;
+        }
+        .table tr:hover td { background-color: #252525 !important; }
+
+        /* ЧИТАЕМОСТЬ КОНТЕНТА */
+        .client-name { color: #ccc !important; font-weight: 500; } /* Имя клиента - светло-серое */
+        .cargo-title { color: #ffffff !important; font-weight: 600; } /* Название груза - белое */
+        .cargo-info { color: #999 !important; } /* Доп. инфо - чуть светлее */
+
+        /* Статус-селект */
+        .status-select {
+            background-color: #121212 !important;
+            color: #fff !important;
+            border: 1px solid #444 !important;
+            border-radius: 8px;
+        }
+
+        /* Бейджи */
+        .badge-status { padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; }
+        .badge-pending { background-color: #444; }
         .badge-approved { background-color: #0d6efd; }
         .badge-assembling { background-color: #fd7e14; }
         .badge-inflight { background-color: #6610f2; }
@@ -15,68 +61,70 @@
         .badge-canceled { background-color: #dc3545; }
     </style>
 </head>
-<body class="bg-dark text-white">
+<body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow mb-5 border-bottom border-secondary">
+<nav class="navbar navbar-expand-lg navbar-dark shadow mb-5">
     <div class="container">
         <a class="navbar-brand fw-bold" href="/">🚀 Space Delivery</a>
         <div class="navbar-nav ms-auto">
             <a class="nav-link px-3" href="/rockets">РАКЕТЫ</a>
-            <a class="nav-link px-3 active text-info" href="/orders">ЗАКАЗЫ</a>
-            <a class="nav-link px-3 text-success" href="/users/profile">МОЙ ПРОФИЛЬ</a>
+            <a class="nav-link px-3 active" href="/orders">ЗАКАЗЫ</a>
+            <a class="nav-link px-3" href="/users/profile">МОЙ ПРОФИЛЬ</a>
         </div>
     </div>
 </nav>
 
-<div class="container">
+<div class="container pb-5">
     <h2 class="mb-4 fw-bold" th:text="${#authorization.expression('hasRole(''MODERATOR'')') ? 'Центр управления полетами' : 'Мои заказы'}">Заказы</h2>
 
-    <div class="table-responsive">
-        <table class="table table-dark table-hover border-secondary align-middle">
-            <thead class="table-active">
-            <tr>
-                <th>ID</th>
-                <th>Ракета</th>
-                <th sec:authorize="hasRole('MODERATOR')">Клиент</th>
-                <th>Груз / Орбита</th>
-                <th>Дата создания</th>
-                <th>Статус</th>
-                <th sec:authorize="hasRole('MODERATOR')">Действие</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${orders}">
-                <td th:text="${order.id}">1</td>
-                <td class="fw-bold text-info" th:text="${order.rocket.name}">Falcon 9</td>
-                <td sec:authorize="hasRole('MODERATOR')" th:text="${order.user.username}">user123</td>
-                <td>
-                    <div th:text="${order.cargoName}">Спутник</div>
-                    <small class="text-secondary" th:text="${order.cargoWeight} + 'кг | ' + ${order.orbitType}">100кг | LEO</small>
-                </td>
-                <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2026</td>
+    <div class="orders-wrapper">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ракета</th>
+                    <th sec:authorize="hasRole('MODERATOR')">Клиент</th>
+                    <th>Груз / Орбита</th>
+                    <th>Дата создания</th>
+                    <th>Статус</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td class="text-secondary" th:text="'#' + ${order.id}">#1</td>
+                    <td class="fw-bold text-info" th:text="${order.rocket.name}">Falcon 9</td>
 
-                <td>
+                    <td sec:authorize="hasRole('MODERATOR')" class="client-name" th:text="${order.user.username}">user123</td>
+
+                    <td>
+                        <div class="cargo-title" th:text="${order.cargoName}">Спутник</div>
+                        <small class="cargo-info" th:text="${order.cargoWeight} + 'кг | ' + ${order.orbitType}">100кг | LEO</small>
+                    </td>
+
+                    <td class="text-secondary" th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2026</td>
+
+                    <td>
                         <span sec:authorize="hasRole('USER')"
-                              class="badge"
+                              class="badge badge-status"
                               th:classappend="'badge-' + ${order.status.name().toLowerCase()}"
                               th:text="${order.status}">PENDING</span>
 
-                    <form sec:authorize="hasRole('MODERATOR')" th:action="@{/orders/status/{id}(id=${order.id})}" th:method="post" class="d-flex gap-2">
-                        <select name="status" class="form-select form-select-sm status-select">
-                            <option th:each="st : ${T(ru.rutmiit.models.enums.OrderStatus).values()}"
-                                    th:value="${st}"
-                                    th:text="${st}"
-                                    th:selected="${st == order.status}"></option>
-                        </select>
-                        <button type="submit" class="btn btn-sm btn-primary">OK</button>
-                    </form>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(orders)}">
-                <td colspan="7" class="text-center py-5 text-secondary">Список заказов пуст</td>
-            </tr>
-            </tbody>
-        </table>
+                        <form sec:authorize="hasRole('MODERATOR')" th:action="@{/orders/status/{id}(id=${order.id})}" th:method="post" class="d-flex gap-2">
+                            <select name="status" class="form-select form-select-sm status-select">
+                                <option th:each="st : ${T(ru.rutmiit.models.enums.OrderStatus).values()}"
+                                        th:value="${st}" th:text="${st}" th:selected="${st == order.status}"></option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary px-3">OK</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(orders)}">
+                    <td colspan="6" class="text-center py-5 text-secondary">Список заказов пуст</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
