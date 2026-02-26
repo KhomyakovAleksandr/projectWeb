@@ -13,11 +13,10 @@ public class Role extends BaseEntity {
     }
 
     public Role() {
-
     }
 
     @Enumerated(EnumType.STRING)
-    @Column(unique = true)
+    @Column(unique = true, nullable = false) // добавил nullable для надежности
     public UserRoles getName() {
         return name;
     }

@@ -36,12 +36,12 @@ public class AppSecurityConfiguration {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/favicon.ico", "/error").permitAll()
                         .requestMatchers("/", "/users/login", "/users/register", "/users/login-error").permitAll()
-                        .requestMatchers("/actuator/**").permitAll() // Для демо; в production настроить безопасность
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/users/profile").authenticated()
-                        .requestMatchers("/employees/add", "/employees/employee-delete/*")
-                            .hasAnyRole(UserRoles.MODERATOR.name(), UserRoles.ADMIN.name())
-                        .requestMatchers("/companies/add", "/companies/company-delete/*")
-                            .hasRole(UserRoles.ADMIN.name())
+                        .requestMatchers("/rockets/add", "/rockets/delete/**").hasRole(UserRoles.MODERATOR.name())
+                        .requestMatchers("/orders/manage/**").hasRole(UserRoles.MODERATOR.name())
+
+                        // Все остальное (просмотр каталога, личный кабинет) — любому залогиненному юзеру
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

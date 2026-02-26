@@ -24,9 +24,9 @@ public class Init implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final String defaultPassword;
 
-    public Init(UserRepository userRepository, 
-                UserRoleRepository userRoleRepository, 
-                PasswordEncoder passwordEncoder, 
+    public Init(UserRepository userRepository,
+                UserRoleRepository userRoleRepository,
+                PasswordEncoder passwordEncoder,
                 @Value("${app.default.password}") String defaultPassword) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
@@ -47,60 +47,30 @@ public class Init implements CommandLineRunner {
         if (userRoleRepository.count() == 0) {
             log.info("Создание базовых ролей...");
             userRoleRepository.saveAll(List.of(
-                new Role(UserRoles.ADMIN),
-                new Role(UserRoles.MODERATOR),
-                new Role(UserRoles.USER)
+                    new Role(UserRoles.MODERATOR),
+                    new Role(UserRoles.USER)
             ));
-            log.info("Роли созданы: ADMIN, MODERATOR, USER");
-        } else {
-            log.debug("Роли уже существуют, пропуск инициализации");
+            log.info("Роли созданы: MODERATOR, USER"); // Убрал ADMIN из лога
         }
     }
 
     private void initUsers() {
         if (userRepository.count() == 0) {
             log.info("Создание пользователей по умолчанию...");
-            initAdmin();
             initModerator();
             initNormalUser();
             log.info("Пользователи по умолчанию созданы");
-        } else {
-            log.debug("Пользователи уже существуют, пропуск инициализации");
         }
-    }
-
-    private void initAdmin() {
-        var adminRole = userRoleRepository
-                .findRoleByName(UserRoles.ADMIN)
-                .orElseThrow();
-
-        var adminUser = new User(
-            "admin", 
-            passwordEncoder.encode(defaultPassword), 
-            "admin@example.com", 
-            "Admin Adminovich", 
-            30
-        );
-        adminUser.setRoles(List.of(adminRole));
-        userRepository.save(adminUser);
-        log.info("Создан администратор: admin");
     }
 
     private void initModerator() {
         var moderatorRole = userRoleRepository
-                .findRoleByName(UserRoles.MODERATOR)
+                .findRoleByName(UserRoles.MODERATOR) // Теперь репозиторий это знает
                 .orElseThrow();
 
-        var moderatorUser = new User(
-            "moderator", 
-            passwordEncoder.encode(defaultPassword), 
-            "moderator@example.com", 
-            "Moder Moderovich", 
-            24
-        );
+        var moderatorUser = new User("moderator", passwordEncoder.encode(defaultPassword), "moderator@example.com", "Moder Moderovich", 24);
         moderatorUser.setRoles(List.of(moderatorRole));
         userRepository.save(moderatorUser);
-        log.info("Создан модератор: moderator");
     }
 
     private void initNormalUser() {
@@ -108,15 +78,8 @@ public class Init implements CommandLineRunner {
                 .findRoleByName(UserRoles.USER)
                 .orElseThrow();
 
-        var normalUser = new User(
-            "user", 
-            passwordEncoder.encode(defaultPassword), 
-            "user@example.com", 
-            "User Userovich", 
-            22
-        );
+        var normalUser = new User("user", passwordEncoder.encode(defaultPassword), "user@example.com", "User Userovich", 22);
         normalUser.setRoles(List.of(userRole));
         userRepository.save(normalUser);
-        log.info("Создан обычный пользователь: user");
     }
 }

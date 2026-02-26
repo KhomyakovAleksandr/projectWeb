@@ -1,19 +1,32 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head"/>
-<body>
-<div th:replace="fragments/navbar"></div>
-<main class="container">
-     <article class="text-center">
-     <hgroup>
-     <h1>Добро пожаловать в систему управления компаниями!</h1>
-     <p>Современное приложение на Spring Boot для управления компаниями и сотрудниками</p>
-     </hgroup>
-     <p>
-         <small>Последнее обновление данных: <strong th:text="${#temporals.format(#temporals.createNow(), 'dd.MM.yyyy HH:mm:ss')}"></strong></small>
-     </p>
-     </article>
-</main>
-<footer th:replace="fragments/footer"></footer>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Space Delivery - Главная</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-white">
+<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow">
+    <div class="container">
+        <a class="navbar-brand" href="/">🚀 Space Delivery</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/rockets">Каталог</a>
+            <a sec:authorize="isAnonymous()" class="nav-link text-primary" href="/users/login">Войти</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link text-success" href="/users/profile">Мой профиль</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container text-center mt-5">
+    <div class="py-5">
+        <h1 class="display-4">Доставка грузов на орбиту</h1>
+        <p class="lead">Выбирайте ракету, загружайте паллеты и отправляйте в космос за пару кликов.</p>
+        <hr class="my-4 bg-secondary">
+        <div class="mt-4">
+            <a href="/rockets" class="btn btn-primary btn-lg px-5">Посмотреть ракеты</a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
