@@ -48,4 +48,13 @@ public class RocketServiceImpl implements RocketService {
                 .map(rocket -> modelMapper.map(rocket, RocketDTO.class))
                 .orElseThrow(() -> new RuntimeException("Ракета с ID " + id + " не найдена"));
     }
+
+    @Override
+    @Transactional
+    public void deleteRocket(Long id) {
+        if (!rocketRepository.existsById(id)) {
+            throw new RuntimeException("Ракета с ID " + id + " не найдена");
+        }
+        rocketRepository.deleteById(id);
+    }
 }

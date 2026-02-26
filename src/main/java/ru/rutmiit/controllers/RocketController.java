@@ -1,6 +1,7 @@
 package ru.rutmiit.controllers;
 
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -51,5 +52,12 @@ public class RocketController {
     public String details(@PathVariable Long id, Model model) {
         model.addAttribute("rocket", rocketService.getRocketById(id));
         return "rocket-details";
+    }
+
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('MODERATOR')")
+    public String deleteRocket(@PathVariable Long id) {
+        rocketService.deleteRocket(id);
+        return "redirect:/rockets";
     }
 }

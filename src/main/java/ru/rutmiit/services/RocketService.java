@@ -14,4 +14,6 @@ public interface RocketService {
 
     // Найти одну ракету по ID (для страницы деталей)
     RocketDTO getRocketById(Long id);
+
+    void deleteRocket(Long id);
 }
