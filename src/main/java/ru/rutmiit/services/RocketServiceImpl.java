@@ -57,4 +57,12 @@ public class RocketServiceImpl implements RocketService {
         }
         rocketRepository.deleteById(id);
     }
+
+    @Override
+    public List<RocketDTO> searchRockets(String keyword) {
+        return rocketRepository.findAllByNameContainingIgnoreCase(keyword)
+                .stream()
+                .map(r -> modelMapper.map(r, RocketDTO.class))
+                .collect(Collectors.toList());
+    }
 }

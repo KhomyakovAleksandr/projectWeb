@@ -16,4 +16,6 @@ public interface RocketService {
     RocketDTO getRocketById(Long id);
 
     void deleteRocket(Long id);
+
+    List<RocketDTO> searchRockets(String keyword);
 }

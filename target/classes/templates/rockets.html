@@ -10,6 +10,9 @@
         .nav-link { color: #fff !important; font-weight: 500; }
         .rocket-card { background: #1e1e1e; border: 1px solid #333; transition: 0.3s; }
         .rocket-card:hover { border-color: #0d6efd; transform: translateY(-5px); }
+        /* Стили для формы поиска */
+        .search-input { background-color: #000 !important; color: white !important; border: 1px solid #333 !important; }
+        .search-input:focus { border-color: #0d6efd !important; box-shadow: none !important; }
     </style>
 </head>
 <body class="bg-dark text-white">
@@ -31,6 +34,21 @@
         <a href="/rockets/add" sec:authorize="hasRole('MODERATOR')" class="btn btn-success">+ Добавить ракету</a>
     </div>
 
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <form th:action="@{/rockets}" method="get" class="d-flex gap-2">
+                <input type="text" name="keyword" th:value="${keyword}"
+                       class="form-control search-input"
+                       placeholder="Поиск по названию ракеты..." aria-label="Search">
+                <button class="btn btn-primary" type="submit">Найти</button>
+                <a th:href="@{/rockets}" class="btn btn-outline-secondary" th:if="${keyword != null and keyword != ''}">Сброс</a>
+            </form>
+            <div class="mt-2 small text-secondary" th:if="${keyword != null and keyword != ''}">
+                Результаты поиска для: <span class="text-info" th:text="${keyword}"></span>
+            </div>
+        </div>
+    </div>
+
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:each="rocket : ${rockets}">
             <div class="card rocket-card h-100 text-white p-3">
@@ -43,6 +61,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(rockets)}">
+            <h4 class="text-secondary">Ракеты по вашему запросу не найдены 🚀</h4>
+            <a th:href="@{/rockets}" class="text-info">Показать все ракеты</a>
         </div>
     </div>
 </div>

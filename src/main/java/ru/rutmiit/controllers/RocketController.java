@@ -8,7 +8,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.rutmiit.dto.RocketAddDto;
+import ru.rutmiit.dto.RocketDTO;
 import ru.rutmiit.services.RocketService;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/rockets")
@@ -20,11 +23,7 @@ public class RocketController {
         this.rocketService = rocketService;
     }
 
-    @GetMapping
-    public String listRockets(Model model) {
-        model.addAttribute("rockets", rocketService.getAllRockets());
-        return "rockets";
-    }
+
 
     @GetMapping("/add")
     public String addRocket(Model model) {
@@ -59,5 +58,22 @@ public class RocketController {
     public String deleteRocket(@PathVariable Long id) {
         rocketService.deleteRocket(id);
         return "redirect:/rockets";
+    }
+
+    @GetMapping
+    public String listRockets(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
+        List<RocketDTO> rockets;
+
+        // Если в строке поиска пусто (keyword == null), просто берем все ракеты
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            rockets = rocketService.searchRockets(keyword);
+        } else {
+            rockets = rocketService.getAllRockets();
+        }
+
+        model.addAttribute("rockets", rockets);
+        model.addAttribute("keyword", keyword); // Это чтобы текст не исчезал из поля поиска после нажатия
+
+        return "rockets";
     }
 }
