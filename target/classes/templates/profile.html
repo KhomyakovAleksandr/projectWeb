@@ -1,39 +1,33 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Мой профиль</title>
+    <title>Space Delivery - Профиль</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-    <div class="card shadow p-4 border-0">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2>Личный кабинет</h2>
-            <span th:if="${isModerator}" class="badge bg-warning text-dark fs-6">Статус: МОДЕРАТОР</span>
+<body class="bg-dark text-white">
+<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow">
+    <div class="container">
+        <a class="navbar-brand" href="/">🚀 Space Delivery</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link text-white" href="/rockets">РАКЕТЫ</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link text-white" href="/orders">ЗАКАЗЫ</a>
+            <a class="nav-link text-success fw-bold" href="/users/profile">МОЙ ПРОФИЛЬ</a>
         </div>
-        <hr>
-        <div class="row">
-            <div class="col-md-8">
-                <p><strong>Логин:</strong> <span th:text="${user.username}">user</span></p>
-                <p><strong>Полное имя:</strong> <span th:text="${user.fullName}">Иванов Иван</span></p>
-                <p><strong>Email:</strong> <span th:text="${user.email}">mail@example.com</span></p>
-                <p><strong>Возраст:</strong> <span th:text="${user.age}">25</span></p>
-            </div>
+    </div>
+</nav>
 
-            <div class="col-md-4" th:if="${isModerator}">
-                <div class="card border-warning bg-light p-3">
-                    <h6>Панель модератора</h6>
-                    <a href="/rockets/add" class="btn btn-sm btn-success mb-2">Добавить ракету</a>
-                    <a href="/orders/manage" class="btn btn-sm btn-outline-dark">Заказы системы</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-4 d-flex gap-2">
-            <a href="/" class="btn btn-outline-secondary">На главную</a>
-            <form th:action="@{/users/logout}" th:method="post">
-                <button type="submit" class="btn btn-danger">Выйти</button>
+<div class="container mt-5 text-center">
+    <div class="py-5 mx-auto" style="max-width: 500px;">
+        <h2 class="display-5 mb-4">Данные аккаунта</h2>
+        <div class="text-start p-4 rounded bg-black border border-secondary">
+            <p><strong>Логин:</strong> <span th:text="${user.username}">...</span></p>
+            <p><strong>ФИО:</strong> <span th:text="${user.fullName}">...</span></p>
+            <p><strong>Email:</strong> <span th:text="${user.email}">...</span></p>
+            <p><strong>Возраст:</strong> <span th:text="${user.age}">...</span></p>
+            <hr class="bg-secondary">
+            <form th:action="@{/users/logout}" method="post">
+                <button type="submit" class="btn btn-danger w-100 mt-2">Выйти из аккаунта</button>
             </form>
         </div>
     </div>
