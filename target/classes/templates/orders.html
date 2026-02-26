@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Список заказов - Space Delivery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .status-select { min-width: 150px; background-color: #1a1a1a !important; color: #fff !important; border: 1px solid #444; }
+        .table-dark { --bs-table-bg: #000; }
+        .badge-pending { background-color: #6c757d; }
+        .badge-approved { background-color: #0d6efd; }
+        .badge-assembling { background-color: #fd7e14; }
+        .badge-inflight { background-color: #6610f2; }
+        .badge-completed { background-color: #198754; }
+        .badge-canceled { background-color: #dc3545; }
+    </style>
+</head>
+<body class="bg-dark text-white">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow mb-5 border-bottom border-secondary">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">🚀 Space Delivery</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link px-3" href="/rockets">РАКЕТЫ</a>
+            <a class="nav-link px-3 active text-info" href="/orders">ЗАКАЗЫ</a>
+            <a class="nav-link px-3 text-success" href="/users/profile">МОЙ ПРОФИЛЬ</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="mb-4 fw-bold" th:text="${#authorization.expression('hasRole(''MODERATOR'')') ? 'Центр управления полетами' : 'Мои заказы'}">Заказы</h2>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover border-secondary align-middle">
+            <thead class="table-active">
+            <tr>
+                <th>ID</th>
+                <th>Ракета</th>
+                <th sec:authorize="hasRole('MODERATOR')">Клиент</th>
+                <th>Груз / Орбита</th>
+                <th>Дата создания</th>
+                <th>Статус</th>
+                <th sec:authorize="hasRole('MODERATOR')">Действие</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}">1</td>
+                <td class="fw-bold text-info" th:text="${order.rocket.name}">Falcon 9</td>
+                <td sec:authorize="hasRole('MODERATOR')" th:text="${order.user.username}">user123</td>
+                <td>
+                    <div th:text="${order.cargoName}">Спутник</div>
+                    <small class="text-secondary" th:text="${order.cargoWeight} + 'кг | ' + ${order.orbitType}">100кг | LEO</small>
+                </td>
+                <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2026</td>
+
+                <td>
+                        <span sec:authorize="hasRole('USER')"
+                              class="badge"
+                              th:classappend="'badge-' + ${order.status.name().toLowerCase()}"
+                              th:text="${order.status}">PENDING</span>
+
+                    <form sec:authorize="hasRole('MODERATOR')" th:action="@{/orders/status/{id}(id=${order.id})}" th:method="post" class="d-flex gap-2">
+                        <select name="status" class="form-select form-select-sm status-select">
+                            <option th:each="st : ${T(ru.rutmiit.models.enums.OrderStatus).values()}"
+                                    th:value="${st}"
+                                    th:text="${st}"
+                                    th:selected="${st == order.status}"></option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">OK</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(orders)}">
+                <td colspan="7" class="text-center py-5 text-secondary">Список заказов пуст</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

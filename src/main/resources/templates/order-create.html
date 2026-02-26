@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Оформление миссии - Space Delivery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-white">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow mb-5 border-bottom border-secondary">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">🚀 Space Delivery</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="mx-auto p-4 rounded border border-secondary bg-black shadow-lg" style="max-width: 650px;">
+        <h2 class="text-info mb-4 fw-bold">Параметры запуска</h2>
+
+        <form th:action="@{/orders/create}" th:method="post" th:object="${orderCreateDto}">
+            <input type="hidden" th:field="*{rocketId}">
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-secondary">Название груза</label>
+                    <input type="text" th:field="*{cargoName}" class="form-control bg-dark text-white border-secondary" placeholder="Напр: Спутник связи">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-secondary">Вес груза (кг)</label>
+                    <input type="number" step="0.1" th:field="*{cargoWeight}" class="form-control bg-dark text-white border-secondary">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-secondary">Целевая орбита</label>
+                <select th:field="*{orbitType}" class="form-select bg-dark text-white border-secondary">
+                    <option value="LEO">Низкая околоземная (LEO)</option>
+                    <option value="MEO">Средняя околоземная (MEO)</option>
+                    <option value="GEO">Геостационарная (GEO)</option>
+                    <option value="HEO">Высокоэллиптическая (HEO)</option>
+                </select>
+            </div>
+
+            <hr class="border-secondary my-4">
+            <h5 class="mb-3 text-info">Контактные данные</h5>
+
+            <div class="mb-3">
+                <label class="form-label text-secondary">Номер телефона</label>
+                <input type="text" th:field="*{phoneNumber}" class="form-control bg-dark text-white border-secondary" placeholder="+7 (___) ___-__-__">
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label text-secondary">Email для связи</label>
+                <input type="email" th:field="*{contactEmail}" class="form-control bg-dark text-white border-secondary">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 shadow">Подтвердить бронирование</button>
+            <a href="/rockets" class="btn btn-outline-secondary w-100 mt-2">Отмена</a>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
