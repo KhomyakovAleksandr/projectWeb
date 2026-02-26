@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Space Delivery - Ракеты</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #121212; }
+        .navbar { background-color: #000 !important; border-bottom: 1px solid #333; }
+        .nav-link { color: #fff !important; font-weight: 500; }
+        .rocket-card { background: #1e1e1e; border: 1px solid #333; transition: 0.3s; }
+        .rocket-card:hover { border-color: #0d6efd; transform: translateY(-5px); }
+    </style>
+</head>
+<body class="bg-dark text-white">
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow mb-5">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">🚀 Space Delivery</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link px-3 active text-info" href="/rockets">РАКЕТЫ</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link px-3" href="/orders">ЗАКАЗЫ</a>
+            <a sec:authorize="isAuthenticated()" class="nav-link px-3 text-success" href="/users/profile">МОЙ ПРОФИЛЬ</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Каталог носителей</h2>
+        <a href="/rockets/add" sec:authorize="hasRole('MODERATOR')" class="btn btn-success">+ Добавить ракету</a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="rocket : ${rockets}">
+            <div class="card rocket-card h-100 text-white p-3">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold" th:text="${rocket.name}">Falcon 9</h5>
+                    <p class="card-text text-secondary small" th:text="${#strings.abbreviate(rocket.description, 100)}">Описание...</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="text-info fw-bold" th:text="${rocket.price} + ' $'">62M $</span>
+                        <a th:href="@{/rockets/details/{id}(id=${rocket.id})}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
