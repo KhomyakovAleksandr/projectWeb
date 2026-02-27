@@ -11,7 +11,7 @@ import lombok.Setter;
 public class OrderCreateDto {
 
     @NotNull
-    private Long rocketId; // ID ракеты, на которой летим
+    private Long rocketId;
 
     @NotBlank(message = "Название груза обязательно")
     private String cargoName;

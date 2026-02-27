@@ -94,9 +94,6 @@ public class AuthController {
         );
 
         model.addAttribute("user", userProfileView);
-
-        // --- ВОТ ЭТО НУЖНО ДОБАВИТЬ ---
-        // Проверяем, есть ли у пользователя роль MODERATOR в текущей сессии
         boolean isModerator = org.springframework.security.core.context.SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getAuthorities()
@@ -104,8 +101,6 @@ public class AuthController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MODERATOR"));
 
         model.addAttribute("isModerator", isModerator);
-        // ------------------------------
-
         return "profile";
     }
 }

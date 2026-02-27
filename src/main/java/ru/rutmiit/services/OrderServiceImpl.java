@@ -20,7 +20,8 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final RocketRepository rocketRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, RocketRepository rocketRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository,
+                            RocketRepository rocketRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.rocketRepository = rocketRepository;
@@ -31,12 +32,9 @@ public class OrderServiceImpl implements OrderService {
     public void createOrder(OrderCreateDto orderDto, String username) {
         User user = userRepository.findByUsername(username).orElseThrow();
         Rocket rocket = rocketRepository.findById(orderDto.getRocketId()).orElseThrow();
-
-        // ПРОВЕРКА: Вес из формы (DTO) сравниваем с payloadCapacity из твоей сущности
         if (orderDto.getCargoWeight() > rocket.getPayloadCapacity()) {
             throw new IllegalArgumentException("Груз слишком тяжелый для этой ракеты!");
         }
-
         Order order = new Order();
         order.setUser(user);
         order.setRocket(rocket);
@@ -44,6 +42,8 @@ public class OrderServiceImpl implements OrderService {
         order.setCargoWeight(orderDto.getCargoWeight());
         order.setOrbitType(orderDto.getOrbitType());
         order.setStatus(OrderStatus.PENDING);
+        order.setPhoneNumber(orderDto.getPhoneNumber());
+        order.setContactEmail(orderDto.getContactEmail());
 
         orderRepository.save(order);
     }
@@ -51,8 +51,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getAllOrders(String username) {
         User user = userRepository.findByUsername(username).orElseThrow();
-
-        // Проверяем, есть ли у пользователя роль MODERATOR
         boolean isModerator = user.getRoles().stream()
                 .anyMatch(role -> role.getName().name().equals("MODERATOR"));
 
@@ -69,5 +67,11 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId).orElseThrow();
         order.setStatus(newStatus);
         orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public void deleteOrder(Long id) {
+        orderRepository.deleteById(id);
     }
 }

@@ -14,7 +14,6 @@
             border-bottom: 1px solid #333;
         }
 
-        /* Основная карточка: мягкий темно-серый */
         .form-card {
             background-color: #121212;
             border: 1px solid #444;
@@ -22,7 +21,6 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
 
-        /* Поля ввода */
         .custom-input {
             background-color: #1e1e1e !important;
             color: white !important;
@@ -31,13 +29,11 @@
             transition: all 0.3s ease;
         }
 
-        /* ИСПРАВЛЕНИЕ: Светлые подсказки (placeholder) */
         .custom-input::placeholder {
-            color: #aaa !important; /* Сделали значительно светлее */
-            opacity: 1; /* Для Firefox */
+            color: #aaa !important;
+            opacity: 1;
         }
 
-        /* ФИКС АВТОЗАПОЛНЕНИЯ: Чтобы поля не становились белыми */
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus,

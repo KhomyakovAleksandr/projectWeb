@@ -16,7 +16,6 @@
             margin-bottom: 50px;
         }
 
-        /* ИСПРАВЛЕНО: Текст внутри полей теперь белый и четкий */
         .custom-input {
             background-color: #1e1e1e !important;
             color: #ffffff !important;
@@ -26,10 +25,8 @@
             transition: all 0.3s ease;
         }
 
-        /* Светлый плейсхолдер для контраста */
-        .custom-input::placeholder { color: #aaaaaa !important; }
 
-        /* ФИКС АВТОЗАПОЛНЕНИЯ: Чтобы поля не "белели" при выборе старых данных */
+        .custom-input::placeholder { color: #aaaaaa !important; }
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus,

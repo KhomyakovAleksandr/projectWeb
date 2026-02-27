@@ -43,7 +43,6 @@ public class OrderController {
         dto.setRocketId(rocketId);
 
         model.addAttribute("orderCreateDto", dto);
-        // Берем payloadCapacity и кладем в переменную maxWeight для HTML
         model.addAttribute("maxWeight", rocket.getPayloadCapacity());
 
         return "order-create";
@@ -53,11 +52,23 @@ public class OrderController {
     public String createOrder(@Valid OrderCreateDto orderCreateDto,
                               BindingResult bindingResult,
                               Principal principal,
-                              RedirectAttributes redirectAttributes) {
+                              Model model) {
+
         if (bindingResult.hasErrors()) {
+            Rocket rocket = rocketRepository.findById(orderCreateDto.getRocketId()).orElseThrow();
+            model.addAttribute("maxWeight", rocket.getPayloadCapacity());
             return "order-create";
         }
-        orderService.createOrder(orderCreateDto, principal.getName());
+
+        try {
+            orderService.createOrder(orderCreateDto, principal.getName());
+        } catch (IllegalArgumentException e) {
+            Rocket rocket = rocketRepository.findById(orderCreateDto.getRocketId()).orElseThrow();
+            model.addAttribute("maxWeight", rocket.getPayloadCapacity());
+            model.addAttribute("weightError", e.getMessage());
+            return "order-create";
+        }
+
         return "redirect:/orders";
     }
 
@@ -66,6 +77,14 @@ public class OrderController {
     @PreAuthorize("hasRole('MODERATOR')")
     public String changeStatus(@PathVariable Long id, @RequestParam OrderStatus status) {
         orderService.changeStatus(id, status);
+        return "redirect:/orders";
+    }
+
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('MODERATOR')")
+    public String deleteOrder(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        orderService.deleteOrder(id);
+        redirectAttributes.addFlashAttribute("message", "Заказ #" + id + " успешно удален");
         return "redirect:/orders";
     }
 }

@@ -10,9 +10,8 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    // Найти все заказы конкретного пользователя, сортируя по дате (новые сверху)
+
     List<Order> findAllByUserOrderByCreatedAtDesc(User user);
 
-    // Найти вообще все заказы для модератора, тоже с сортировкой
     List<Order> findAllByOrderByCreatedAtDesc();
 }

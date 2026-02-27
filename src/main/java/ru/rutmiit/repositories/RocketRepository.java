@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface RocketRepository extends JpaRepository<Rocket, Long> {
-    // Если понадобится искать по имени
+
     Optional<Rocket> findByName(String name);
 
     List<Rocket> findAllByNameContainingIgnoreCase(String name);

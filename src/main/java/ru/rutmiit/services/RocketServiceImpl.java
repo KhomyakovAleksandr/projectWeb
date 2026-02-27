@@ -33,10 +33,7 @@ public class RocketServiceImpl implements RocketService {
     @Override
     @Transactional
     public void addRocket(RocketAddDto rocketAddDto) {
-        // Превращаем DTO из формы в Entity для базы
         Rocket rocket = modelMapper.map(rocketAddDto, Rocket.class);
-
-        // Устанавливаем доступность по умолчанию
         rocket.setAvailable(true);
 
         rocketRepository.save(rocket);

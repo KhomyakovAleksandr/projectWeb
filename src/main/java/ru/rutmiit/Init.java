@@ -50,7 +50,7 @@ public class Init implements CommandLineRunner {
                     new Role(UserRoles.MODERATOR),
                     new Role(UserRoles.USER)
             ));
-            log.info("Роли созданы: MODERATOR, USER"); // Убрал ADMIN из лога
+            log.info("Роли созданы: MODERATOR, USER");
         }
     }
 
@@ -65,10 +65,11 @@ public class Init implements CommandLineRunner {
 
     private void initModerator() {
         var moderatorRole = userRoleRepository
-                .findRoleByName(UserRoles.MODERATOR) // Теперь репозиторий это знает
+                .findRoleByName(UserRoles.MODERATOR)
                 .orElseThrow();
 
-        var moderatorUser = new User("moderator", passwordEncoder.encode(defaultPassword), "moderator@example.com", "Moder Moderovich", 24);
+        var moderatorUser = new User("moderator", passwordEncoder.encode(defaultPassword),
+                "moderator@example.com", "Moder Moderovich", 24);
         moderatorUser.setRoles(List.of(moderatorRole));
         userRepository.save(moderatorUser);
     }
@@ -78,7 +79,8 @@ public class Init implements CommandLineRunner {
                 .findRoleByName(UserRoles.USER)
                 .orElseThrow();
 
-        var normalUser = new User("user", passwordEncoder.encode(defaultPassword), "user@example.com", "User Userovich", 22);
+        var normalUser = new User("user", passwordEncoder.encode(defaultPassword),
+                "user@example.com", "User Userovich", 22);
         normalUser.setRoles(List.of(userRole));
         userRepository.save(normalUser);
     }

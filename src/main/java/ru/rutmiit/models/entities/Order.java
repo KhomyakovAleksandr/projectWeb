@@ -14,6 +14,16 @@ public class Order extends BaseEntity {
     private String orbitType;
     private OrderStatus status;
     private LocalDateTime createdAt;
+    private String phoneNumber;
+    private String contactEmail;
+
+    @Column(name = "phone_number")
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    @Column(name = "contact_email")
+    public String getContactEmail() { return contactEmail; }
+    public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }
 
     public Order() { this.createdAt = LocalDateTime.now(); }
 

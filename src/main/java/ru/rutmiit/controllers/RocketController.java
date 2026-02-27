@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/rockets")
 public class RocketController {
 
-    private final RocketService rocketService; // Работаем через интерфейс
+    private final RocketService rocketService;
 
     public RocketController(RocketService rocketService) {
         this.rocketService = rocketService;
